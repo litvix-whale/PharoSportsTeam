@@ -30,6 +30,16 @@ FootballPlayer >> club: aString [
     club := aString
 ]
 
+{ #category : 'copying' }
+FootballPlayer >> copy [
+    | newPlayer |
+    newPlayer := super copy.
+    newPlayer club: club.
+    newPlayer annualContract: annualContract.
+    newPlayer goals: goals.
+    ^ newPlayer
+]
+
 { #category : 'methods' }
 FootballPlayer >> earnings [
     ^ annualContract * (1 + (goals / 100))

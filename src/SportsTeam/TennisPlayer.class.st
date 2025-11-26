@@ -9,6 +9,15 @@ Class {
 	#package : 'SportsTeam'
 }
 
+{ #category : 'copying' }
+TennisPlayer >> copy [
+    | newPlayer |
+    newPlayer := super copy.
+    newPlayer worldRanking: worldRanking.
+    newPlayer lastThreePrizes: lastThreePrizes copy.
+    ^ newPlayer
+]
+
 { #category : 'methods' }
 TennisPlayer >> earnings [
     ^ lastThreePrizes sum

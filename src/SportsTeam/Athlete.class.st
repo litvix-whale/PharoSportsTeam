@@ -10,6 +10,43 @@ Class {
 	#package : 'SportsTeam'
 }
 
+{ #category : 'arithmetic' }
+Athlete >> + years [
+    ^ self copy age: age + years
+
+]
+
+{ #category : 'arithmetic' }
+Athlete >> - years [
+    ^ self copy age: age - years
+]
+
+{ #category : 'comparing' }
+Athlete >> < anAthlete [
+    ^ self earnings < anAthlete earnings
+
+]
+
+{ #category : 'comparing' }
+Athlete >> <= anAthlete [
+    ^ self earnings <= anAthlete earnings
+]
+
+{ #category : 'comparing' }
+Athlete >> = anAthlete [
+    ^ self earnings = anAthlete earnings
+]
+
+{ #category : 'comparing' }
+Athlete >> > anAthlete [
+    ^ self earnings > anAthlete earnings
+]
+
+{ #category : 'comparing' }
+Athlete >> >= anAthlete [
+    ^ self earnings >= anAthlete earnings
+]
+
 { #category : 'accessing' }
 Athlete >> age [
     ^ age
@@ -19,6 +56,31 @@ Athlete >> age [
 Athlete >> age: anInteger [
     age := anInteger.
 
+]
+
+{ #category : 'copying' }
+Athlete >> copy [
+    | newAthlete |
+    newAthlete := self class new.
+    newAthlete surname: surname.
+    newAthlete age: age.
+    newAthlete nationality: nationality.
+    ^ newAthlete
+]
+
+{ #category : 'methods' }
+Athlete >> earnings [
+    self subclassResponsibility
+]
+
+{ #category : 'comparing' }
+Athlete >> hash [
+    ^ self earnings hash
+]
+
+{ #category : 'arithmetic' }
+Athlete >> incrementAge [
+    age := age + 1
 ]
 
 { #category : 'initialization' }

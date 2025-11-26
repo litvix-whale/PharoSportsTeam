@@ -62,7 +62,7 @@ SportsTeamManager >> printOn: aStream [
 
 { #category : 'accessing' }
 SportsTeamManager >> richestAthlete [
-    ^ athletes max: [ :a | a earnings ]
+    ^ athletes detectMax: [ :a | a earnings ]
 ]
 
 { #category : 'files' }

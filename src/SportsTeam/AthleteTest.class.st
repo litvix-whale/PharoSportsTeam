@@ -42,6 +42,26 @@ AthleteTest >> testIncrementAge [
     self assert: athlete age equals: 26
 ]
 
+{ #category : 'tests' }
+AthleteTest >> testRichestAthlete [
+    | manager t1 f1 |
+    manager := SportsTeamManager new.
+    
+    t1 := TennisPlayer new.
+    t1 lastThreePrizes: (OrderedCollection withAll: #(100000 100000 100000)).
+    
+    f1 := FootballPlayer new
+        annualContract: 1000000;
+        goals: 0;
+        yourself.
+    
+    manager addAthlete: t1.
+    manager addAthlete: f1.
+    
+    self assert: manager richestAthlete equals: f1.
+    self assert: manager isRichestFootballer
+]
+
 { #category : 'testing' }
 AthleteTest >> testTennisPlayerEarnings [
     | player |
@@ -53,4 +73,28 @@ AthleteTest >> testTennisPlayerEarnings [
         lastThreePrizes: (OrderedCollection withAll: #(100000 200000 300000));
         yourself.
     self assert: player earnings equals: 600000
+]
+
+{ #category : 'tests' }
+AthleteTest >> testUkrainianAthletes [
+    | manager ukrainian |
+    manager := SportsTeamManager new.
+    
+    manager addAthlete: (TennisPlayer new 
+        nationality: 'Ukraine'; 
+        surname: 'Test1';
+        yourself).
+    manager addAthlete: (FootballPlayer new 
+        nationality: 'Poland'; 
+        surname: 'Test2';
+        yourself).
+    manager addAthlete: (FootballPlayer new 
+        nationality: 'Ukraine'; 
+        surname: 'Test3';
+        yourself).
+    
+    ukrainian := manager ukrainianAthletes.
+    
+    self assert: ukrainian size equals: 2.
+    self assert: (ukrainian allSatisfy: [ :a | a nationality = 'Ukraine' ])
 ]

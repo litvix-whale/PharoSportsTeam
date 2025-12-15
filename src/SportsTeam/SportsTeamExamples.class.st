@@ -180,6 +180,69 @@ SportsTeamExamples >> example06SaveAndLoad [
     ^ manager2
 ]
 
+{ #category : 'as yet unclassified' }
+SportsTeamExamples >> exampleOpenGUI [
+    | club presenter |
+    club := self exampleSportsClub.
+    
+    presenter := SportsClubPresenter new.
+    presenter club: club.
+    presenter open
+]
+
+{ #category : 'examples' }
+SportsTeamExamples >> exampleSportsClub [
+    | club |
+    club := SportsClub new name: 'Спортивний клуб Україна'; yourself.
+    
+    "Додаємо тенісистів"
+    #(('Свитолина' 29 15 #(500000 300000 200000))
+      ('Костюк' 21 50 #(100000 150000 80000)))
+    do: [ :data |
+        | player |
+        player := TennisPlayer new
+            surname: data first;
+            age: data second;
+            nationality: 'Ukraine';
+            worldRanking: data third;
+            yourself.
+        player lastThreePrizes: (OrderedCollection withAll: data fourth).
+        club addAthlete: player ].
+    
+    "Додаємо футболістів"
+    #(('Зінченко' 27 'Arsenal' 5000000 3)
+      ('Мудрик' 22 'Chelsea' 8000000 8)
+      ('Ярмоленко' 34 'Dynamo Kyiv' 2000000 12))
+    do: [ :data |
+        club addAthlete: (FootballPlayer new
+            surname: data first;
+            age: data second;
+            nationality: 'Ukraine';
+            club: data third;
+            annualContract: data fourth;
+            goals: data fifth;
+            yourself) ].
+    
+    Transcript clear.
+    Transcript show: '=== Інформація про клуб ==='; cr.
+    club printDetailsOn: Transcript.
+    
+    Transcript cr; show: '=== Топ 2 голеадорів ==='; cr.
+    (club topGoalScorers: 2) do: [ :f |
+        Transcript show: f surname; show: ' - '; show: f goals; show: ' голів'; cr ].
+    
+    Transcript cr; show: '=== Тенісисти топ-50 ==='; cr.
+    (club topRankedTennisPlayers: 50) do: [ :t |
+        Transcript show: t surname; show: ' - рейтинг '; show: t worldRanking; cr ].
+    
+    Transcript cr; show: '=== Найоплачуваніший ==='; cr.
+    Transcript show: club highestPaidAthlete surname; 
+        show: ' - '; 
+        show: club highestPaidAthlete earnings; cr.
+    
+    ^ club
+]
+
 { #category : 'examples' }
 SportsTeamExamples >> runAllExamples [
     Transcript clear; show: '=== Приклади використання SportsTeam ==='; cr; cr.

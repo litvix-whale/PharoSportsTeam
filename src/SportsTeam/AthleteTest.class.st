@@ -43,6 +43,49 @@ AthleteTest >> testIncrementAge [
 ]
 
 { #category : 'tests' }
+AthleteTest >> testRemoveAthleteFromClub [
+    | club athlete |
+
+    club := SportsClub new.
+
+    athlete := FootballPlayer new
+        surname: 'DeleteMe';
+        age: 28;
+        nationality: 'Ukraine';
+        yourself.
+
+    club addAthlete: athlete.
+    self assert: club size equals: 1.
+
+    club removeAthlete: athlete.
+
+    self assert: club size equals: 0.
+
+]
+
+{ #category : 'tests' }
+AthleteTest >> testReviewContractsIncreasesAnnualContract [
+    | club f1 oldContract |
+
+    club := SportsClub new.
+
+    f1 := FootballPlayer new
+        surname: 'Test';
+        age: 30;
+        nationality: 'Ukraine';
+        annualContract: 1000;
+        yourself.
+
+    club addAthlete: f1.
+    oldContract := f1 annualContract.
+
+    club reviewContracts: 10.
+
+    self assert: f1 annualContract equals: oldContract * 1.1.
+
+]
+
+{ #category : 'tests' }
 AthleteTest >> testRichestAthlete [
     | manager t1 f1 |
     manager := SportsTeamManager new.
@@ -60,6 +103,40 @@ AthleteTest >> testRichestAthlete [
     
     self assert: manager richestAthlete equals: f1.
     self assert: manager isRichestFootballer
+]
+
+{ #category : 'tests' }
+AthleteTest >> testSaveAndLoadSTON [
+    | club1 club2 player file |
+
+    club1 := SportsClub new
+        name: 'Test Club';
+        yourself.
+
+    player := TennisPlayer new
+        surname: 'TestPlayer';
+        age: 25;
+        nationality: 'Ukraine';
+        worldRanking: 10;
+        yourself.
+
+    player lastThreePrizes:
+        (OrderedCollection withAll: #(100000 200000 300000)).
+
+    club1 addAthlete: player.
+
+    file := 'test_club.ston'.
+    club1 saveToSTONFile: file.
+
+    club2 := SportsClub new.
+    club2 loadFromSTONFile: file.
+
+    self assert: club2 name equals: 'Test Club'.
+    self assert: club2 size equals: 1.
+    self assert: club2 athletes first surname equals: 'TestPlayer'.
+
+    file asFileReference delete.
+
 ]
 
 { #category : 'testing' }

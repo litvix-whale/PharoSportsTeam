@@ -134,16 +134,16 @@ SportsClub >> printCategory: categorySymbol on: aStream [
 SportsClub >> printDetailsOn: aStream [
     aStream 
         nextPutAll: '=== '; nextPutAll: name; nextPutAll: ' ==='; cr;
-        nextPutAll: 'Всього спортсменів: '; print: self size; cr;
-        nextPutAll: 'Тенісистів: '; print: self tennisPlayers size; cr;
-        nextPutAll: 'Футболістів: '; print: self footballPlayers size; cr;
-        nextPutAll: 'Сумарний заробіток: '; print: self totalEarnings; cr;
-        nextPutAll: 'Середній заробіток: '; print: self averageEarnings; cr;
-        nextPutAll: 'Середній вік: '; print: self averageAge rounded; cr;
+        nextPutAll: 'Всього спортсменів: '; show: self size; cr;
+        nextPutAll: 'Тенісистів: '; show: self tennisPlayers size; cr;
+        nextPutAll: 'Футболістів: '; show: self footballPlayers size; cr;
+        nextPutAll: 'Сумарний заробіток: '; show: self totalEarnings; cr;
+        nextPutAll: 'Середній заробіток: '; show: self averageEarnings; cr;
+        nextPutAll: 'Середній вік: '; show: self averageAge rounded; cr;
         cr;
         nextPutAll: 'Спортсмени:'; cr.
     athletes do: [ :a |
-        aStream nextPutAll: '  - '; print: a; cr ]
+        aStream nextPutAll: '  - '; show: a; cr ]
 ]
 
 { #category : 'printing' }

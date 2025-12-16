@@ -180,6 +180,39 @@ SportsClubPresenter >> initializePresenters [
 ]
 
 { #category : 'methods' }
+SportsClubPresenter >> loadClub [
+    | saved |
+
+    saved := SportsClubMemoryStore savedClub.
+    saved ifNil: [
+        ^ self inform: 'Немає збереженого клубу'
+    ].
+
+    club := saved.
+
+    self updateAthletesList.
+    self updateClubInfo.
+
+    self inform: 'Клуб завантажено з памʼяті'.
+
+]
+
+{ #category : 'methods' }
+SportsClubPresenter >> saveClub [
+    | file |
+
+    "1. збереження в пам’яті"
+    SportsClubMemoryStore save: club.
+
+    "2. резервне збереження у файл"
+    file := FileLocator home / 'club.ston'.
+    club saveToSTONFile: file fullName.
+
+    self inform: 'Клуб збережено'.
+
+]
+
+{ #category : 'methods' }
 SportsClubPresenter >> updateAthletesList [
     athletesList items: club athletes
 ]

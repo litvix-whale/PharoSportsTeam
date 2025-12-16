@@ -51,6 +51,30 @@ AthleteDialog >> createFootballPlayer: surname age: age nationality: nationality
         yourself
 ]
 
+{ #category : 'methods' }
+AthleteDialog >> createTennisPlayer: surname age: age nationality: nationality [
+    | ranking prizesText prizes |
+
+    ranking := (specificInputs at: 1) number
+        ifNil: [ ^ self inform: 'Введіть світовий рейтинг!' ].
+
+    prizesText := (specificInputs at: 2) text
+        ifEmpty: [ ^ self inform: 'Введіть призові!' ].
+
+    "Парсимо: 1000,2000,3000 → #(1000 2000 3000)"
+    prizes := (prizesText findTokens: ',')
+    collect: [ :each | each trimBoth asNumber ].
+
+    ^ TennisPlayer new
+        surname: surname;
+        age: age;
+        nationality: nationality;
+        worldRanking: ranking;
+        lastThreePrizes: (OrderedCollection withAll: prizes);
+        yourself
+
+]
+
 { #category : 'layout' }
 AthleteDialog >> defaultLayout [
     | layout |
@@ -142,8 +166,8 @@ AthleteDialog >> initializePresenters [
 AthleteDialog >> initializeWindow: aWindowPresenter [
     aWindowPresenter
         title: 'Додати спортсмена';
-        initialExtent: 400@500;
-        isModal: true
+        initialExtent: 400@500
+
 ]
 
 { #category : 'methods' }

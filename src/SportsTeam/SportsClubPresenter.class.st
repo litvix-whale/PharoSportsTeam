@@ -16,6 +16,23 @@ Class {
 	#package : 'SportsTeam'
 }
 
+{ #category : 'methods' }
+SportsClubPresenter >> addAthlete [
+    | dialog newAthlete |
+
+    dialog := AthleteDialog new.
+    dialog openModal.
+
+    newAthlete := dialog athlete.
+    newAthlete ifNil: [ ^ self ].  "якщо натиснули Скасувати"
+
+    club addAthlete: newAthlete.
+
+    self updateAthletesList.
+    self updateClubInfo
+
+]
+
 { #category : 'api' }
 SportsClubPresenter >> applyFilter: filterName [
     | filtered |
@@ -32,12 +49,7 @@ SportsClubPresenter >> applyFilter: filterName [
                         ifTrue: [
                             filtered := club athletes
                                 select: [ :a | a isKindOf: FootballPlayer ] ]
-                        ifFalse: [
-                            filterName = 'Українці'
-                                ifTrue: [
-                                    filtered := club athletes
-                                        select: [ :a | a nationality = 'Ukraine' ] ]
-                                ifFalse: [ filtered := club athletes ] ] ] ].
+                        ifFalse: [ filtered := club athletes ] ] ].
 
     athletesList items: filtered
 
@@ -81,55 +93,86 @@ SportsClubPresenter >> initialize [
 SportsClubPresenter >> initializePresenters [
     "Список спортсменів"
     athletesList := self newTable.
-    athletesList 
-        addColumn: (SpStringTableColumn title: 'Прізвище' evaluated: [ :athlete | athlete surname ]);
-        addColumn: (SpStringTableColumn title: 'Вік' evaluated: [ :athlete | athlete age asString ]);
-        addColumn: (SpStringTableColumn title: 'Тип' evaluated: [ :athlete | 
-            (athlete isKindOf: TennisPlayer) 
-                ifTrue: [ 'Тенісист' ] 
-                ifFalse: [ 'Футболіст' ] ]);
-        addColumn: (SpStringTableColumn title: 'Громадянство' evaluated: [ :athlete | athlete nationality ]);
-        addColumn: (SpStringTableColumn title: 'Заробіток' evaluated: [ :athlete | athlete earnings asString ]).
-    
+
+    athletesList
+        addColumn: (SpStringTableColumn
+            title: 'Прізвище'
+            evaluated: [ :item |
+                (item respondsTo: #surname)
+                    ifTrue: [ item surname ]
+                    ifFalse: [ '' ] ]);
+
+        addColumn: (SpStringTableColumn
+            title: 'Вік'
+            evaluated: [ :item |
+                (item respondsTo: #age)
+                    ifTrue: [ item age asString ]
+                    ifFalse: [ '' ] ]);
+
+        addColumn: (SpStringTableColumn
+            title: 'Тип'
+            evaluated: [ :item |
+                (item isKindOf: TennisPlayer)
+                    ifTrue: [ 'Тенісист' ]
+                    ifFalse: [
+                        (item isKindOf: FootballPlayer)
+                            ifTrue: [ 'Футболіст' ]
+                            ifFalse: [ '' ] ] ]);
+
+        addColumn: (SpStringTableColumn
+            title: 'Громадянство'
+            evaluated: [ :item |
+                (item respondsTo: #nationality)
+                    ifTrue: [ item nationality ]
+                    ifFalse: [ '' ] ]);
+
+        addColumn: (SpStringTableColumn
+            title: 'Заробіток'
+            evaluated: [ :item |
+                (item respondsTo: #earnings)
+                    ifTrue: [ item earnings asString ]
+                    ifFalse: [ '' ] ]).
+
     "Текст з інформацією про клуб"
     clubInfoText := self newText.
     clubInfoText beNotEditable.
-    
+
     "Кнопки"
-    addButton := self newButton 
+    addButton := self newButton
         label: 'Додати спортсмена';
         action: [ self addAthlete ];
         yourself.
-    
+
     removeButton := self newButton
         label: 'Видалити';
         action: [ self removeSelectedAthlete ];
         yourself.
-    
+
     saveButton := self newButton
         label: 'Зберегти';
         action: [ self saveClub ];
         yourself.
-    
+
     loadButton := self newButton
         label: 'Завантажити';
         action: [ self loadClub ];
         yourself.
-    
+
     statsButton := self newButton
         label: 'Статистика';
         action: [ self showStatistics ];
         yourself.
-    
+
     "Фільтр"
     filterDropdown := self newDropList.
-    filterDropdown 
-        items: #('Всі' 'Тенісисти' 'Футболісти' 'Українці');
+    filterDropdown
+        items: #('Всі' 'Тенісисти' 'Футболісти');
         selectIndex: 1;
         whenSelectedItemChangedDo: [ :item | self applyFilter: item ].
-    
+
     self updateClubInfo.
     self updateAthletesList
+
 ]
 
 { #category : 'methods' }

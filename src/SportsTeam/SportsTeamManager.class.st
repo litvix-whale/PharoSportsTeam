@@ -144,4 +144,5 @@ SportsTeamManager >> saveToSTONFile: filename [
 { #category : 'accessing' }
 SportsTeamManager >> ukrainianAthletes [
     ^ athletes select: [ :a | a nationality = 'Ukraine' ]
+"test"
 ]

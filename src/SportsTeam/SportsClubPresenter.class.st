@@ -198,6 +198,24 @@ SportsClubPresenter >> loadClub [
 ]
 
 { #category : 'methods' }
+SportsClubPresenter >> removeSelectedAthlete [
+    | selected |
+
+    selected := athletesList selectedItem.
+
+    selected ifNil: [
+        self inform: 'Оберіть спортсмена для видалення'.
+        ^ self
+    ].
+
+    club removeAthlete: selected.
+
+    self updateAthletesList.
+    self updateClubInfo.
+
+]
+
+{ #category : 'methods' }
 SportsClubPresenter >> saveClub [
     | file |
 

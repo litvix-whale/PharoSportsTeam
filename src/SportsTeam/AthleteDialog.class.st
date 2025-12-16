@@ -23,24 +23,41 @@ AthleteDialog >> athlete [
 { #category : 'methods' }
 AthleteDialog >> createAthlete [
     | surname age nationality |
-    surname := surnameInput text ifEmpty: [ ^ self inform: 'Введіть прізвище!' ].
-    age := ageInput number ifNil: [ ^ self inform: 'Введіть вік!' ].
-    nationality := nationalityInput text ifEmpty: [ ^ self inform: 'Введіть громадянство!' ].
-    
-    typeDropdown selectedItem = 'Тенісист'
-        ifTrue: [ athlete := self createTennisPlayer: surname age: age nationality: nationality ]
-        ifFalse: [ athlete := self createFootballPlayer: surname age: age nationality: nationality ].
-    
-    athlete ifNotNil: [ self delete ]
+
+    "Валідація загальних полів"
+    surname := surnameInput text.
+    surname isEmpty ifTrue: [ ^ self inform: 'Введіть прізвище!' ].
+
+    age := ageInput number.
+    age isNil ifTrue: [ ^ self inform: 'Введіть вік!' ].
+
+    nationality := nationalityInput text.
+    nationality isEmpty ifTrue: [ ^ self inform: 'Введіть громадянство!' ].
+
+    "Створення обʼєкта"
+    athlete := (typeDropdown selectedItem = 'Тенісист')
+        ifTrue: [ self createTennisPlayer: surname age: age nationality: nationality ]
+        ifFalse: [ self createFootballPlayer: surname age: age nationality: nationality ].
+
+    "Закриваємо діалог тільки якщо реально створили спортсмена"
+    (athlete isKindOf: Athlete)
+        ifTrue: [ self delete ].
 ]
 
 { #category : 'as yet unclassified' }
 AthleteDialog >> createFootballPlayer: surname age: age nationality: nationality [
     | clubName contract goals |
-    clubName := (specificInputs at: 1) text ifEmpty: [ ^ self inform: 'Введіть клуб!' ].
-    contract := (specificInputs at: 2) number ifNil: [ ^ self inform: 'Введіть контракт!' ].
-    goals := (specificInputs at: 3) number ifNil: [ 0 ].
-    
+
+    "М'яко читаємо поля: якщо пусто/не число — беремо дефолти"
+    clubName := (specificInputs at: 1) text trimBoth.
+    clubName isEmpty ifTrue: [ clubName := 'Unknown club' ].
+
+    contract := (specificInputs at: 2) number.
+    contract isNil ifTrue: [ contract := 0 ].
+
+    goals := (specificInputs at: 3) number.
+    goals isNil ifTrue: [ goals := 0 ].
+
     ^ FootballPlayer new
         surname: surname;
         age: age;
@@ -49,6 +66,7 @@ AthleteDialog >> createFootballPlayer: surname age: age nationality: nationality
         annualContract: contract;
         goals: goals;
         yourself
+
 ]
 
 { #category : 'methods' }

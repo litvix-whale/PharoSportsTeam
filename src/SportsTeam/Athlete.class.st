@@ -34,7 +34,10 @@ Athlete >> <= anAthlete [
 
 { #category : 'comparing' }
 Athlete >> = anAthlete [
+    (anAthlete isKindOf: Athlete) ifFalse: [ ^ false ].
     ^ self earnings = anAthlete earnings
+
+
 ]
 
 { #category : 'comparing' }

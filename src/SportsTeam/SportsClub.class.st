@@ -11,6 +11,7 @@ Class {
 
 { #category : 'actions' }
 SportsClub >> addAthlete: anAthlete [
+    (anAthlete isKindOf: Athlete) ifFalse: [ ^ self ].
     (athletes includes: anAthlete)
         ifFalse: [ athletes add: anAthlete ]
 ]
@@ -211,9 +212,9 @@ SportsClub >> topRankedTennisPlayers: n [
 
 { #category : 'statistics' }
 SportsClub >> totalEarnings [
-    ^ athletes 
-        ifEmpty: [ 0 ]
-        ifNotEmpty: [ athletes sum: [ :a | a earnings ] ]
+    ^ (athletes select: [ :a | a isKindOf: Athlete ])
+        sum: [ :a | a earnings ]
+
 
 ]
 

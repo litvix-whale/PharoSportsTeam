@@ -18,38 +18,42 @@ Class {
 
 { #category : 'methods' }
 SportsClubPresenter >> addAthlete [
-    | dialog newAthlete |
+| dialog newAthlete |
 
     dialog := AthleteDialog new.
     dialog openModal.
 
     newAthlete := dialog athlete.
-    newAthlete ifNil: [ ^ self ].  "якщо натиснули Скасувати"
+    (newAthlete isKindOf: Athlete) ifFalse: [ ^ self ].
 
     club addAthlete: newAthlete.
 
-    self updateAthletesList.
-    self updateClubInfo
+    self applyFilter: filterDropdown selectedItem.
+    self updateClubInfo.
 
 ]
 
 { #category : 'api' }
 SportsClubPresenter >> applyFilter: filterName [
-    | filtered |
+    | base filtered |
+
+    "Беремо ТІЛЬКИ спортсменів"
+    base := club athletes
+        select: [ :a | a isKindOf: Athlete ].
 
     filterName = 'Всі'
-        ifTrue: [ filtered := club athletes ]
+        ifTrue: [ filtered := base ]
         ifFalse: [
             filterName = 'Тенісисти'
                 ifTrue: [
-                    filtered := club athletes
+                    filtered := base
                         select: [ :a | a isKindOf: TennisPlayer ] ]
                 ifFalse: [
                     filterName = 'Футболісти'
                         ifTrue: [
-                            filtered := club athletes
+                            filtered := base
                                 select: [ :a | a isKindOf: FootballPlayer ] ]
-                        ifFalse: [ filtered := club athletes ] ] ].
+                        ifFalse: [ filtered := base ] ] ].
 
     athletesList items: filtered
 

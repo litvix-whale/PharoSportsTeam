@@ -16,6 +16,33 @@ Class {
 	#package : 'SportsTeam'
 }
 
+{ #category : 'api' }
+SportsClubPresenter >> applyFilter: filterName [
+    | filtered |
+
+    filterName = 'Всі'
+        ifTrue: [ filtered := club athletes ]
+        ifFalse: [
+            filterName = 'Тенісисти'
+                ifTrue: [
+                    filtered := club athletes
+                        select: [ :a | a isKindOf: TennisPlayer ] ]
+                ifFalse: [
+                    filterName = 'Футболісти'
+                        ifTrue: [
+                            filtered := club athletes
+                                select: [ :a | a isKindOf: FootballPlayer ] ]
+                        ifFalse: [
+                            filterName = 'Українці'
+                                ifTrue: [
+                                    filtered := club athletes
+                                        select: [ :a | a nationality = 'Ukraine' ] ]
+                                ifFalse: [ filtered := club athletes ] ] ] ].
+
+    athletesList items: filtered
+
+]
+
 { #category : 'initialization' }
 SportsClubPresenter >> club: aSportsClub [
     club := aSportsClub.

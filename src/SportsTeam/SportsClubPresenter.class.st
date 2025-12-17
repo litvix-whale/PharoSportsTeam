@@ -231,6 +231,37 @@ SportsClubPresenter >> saveClub [
 ]
 
 { #category : 'methods' }
+SportsClubPresenter >> showStatistics [
+    | total tennis football avgAge text |
+
+    club ifNil: [
+        self inform: 'Клуб не завантажений'.
+        ^ self
+    ].
+
+    total := club athletes size.
+
+    tennis := club athletes count: [ :a | a isKindOf: TennisPlayer ].
+    football := club athletes count: [ :a | a isKindOf: FootballPlayer ].
+
+    avgAge := total = 0
+        ifTrue: [ 0 ]
+        ifFalse: [
+            (club athletes collect: #age) average asFloat roundTo: 0.1
+        ].
+
+    text :=
+        'Назва клубу: ', club name, String cr,
+        'Всього спортсменів: ', total asString, String cr,
+        'Тенісисти: ', tennis asString, String cr,
+        'Футболісти: ', football asString, String cr,
+        'Середній вік: ', avgAge asString.
+
+    self inform: text.
+
+]
+
+{ #category : 'methods' }
 SportsClubPresenter >> updateAthletesList [
     athletesList items: club athletes
 ]
